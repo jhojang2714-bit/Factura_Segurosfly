@@ -182,7 +182,11 @@
       </table>
 
       <div class="hint-box">
-        <b>Descuentos y upgrades van en líneas aparte</b>, no mezclados en la descripción del plan: una línea "Descuento Promocional (X%) + Cupón (Y%)" con el valor <b>negativo</b> igual a "Total descuentos" del recibo, y si hay upgrades pagados aparte, una línea "Upgrades: [nombres]" con el valor de "Upgrades" del recibo. El Total Pagado de la factura debe cuadrar exacto con el "Total a pagar" del recibo del certificado.
+        <b>Descuentos y upgrades van en líneas aparte</b>, no mezclados en la descripción del plan: una línea por cada descuento (ver truco abajo) y, si hay upgrades pagados aparte, una línea "Upgrades: [nombres]" con el valor de "Upgrades" del recibo. El Total Pagado de la factura debe cuadrar exacto con el "Total a pagar" del recibo del certificado.
+      </div>
+
+      <div class="hint-box" style="border-left-color:var(--oro); background:#FFF8EA;">
+        <b>Truco: descuentos automáticos con "Des_"</b> — en vez de calcular el monto del descuento a mano, escribe en el campo Código algo como <code>Des_65%</code>. El generador reconoce el prefijo "Des_", muestra un campo de "% Descuento" (de 5 a 90) y calcula solo el monto a restar, aplicándolo sobre el subtotal acumulado hasta esa línea — así reproduces descuentos en cascada (ej. 65% y luego 25% sobre lo que queda) exactamente como aparecen en el recibo del certificado, sin sacar la cuenta manualmente.
       </div>
 
       <div class="country-title"><span class="flag-chip">EJEMPLO 1 — 2 pasajeros (Argentina)</span></div>
