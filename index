@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Generador de Factura – Seguros Fly</title>
+<style>
+  :root{
+    --medianoche:#123550;
+    --chatham:#20254C;
+    --oro:#F8B133;
+    --azul:#0A9CD9;
+    --gris-claro:#F2F4F6;
+    --gris-txt:#6B7280;
+    --verde-bg:#EAF7EF;
+    --verde-txt:#1E7E42;
+    --rojo:#C0392B;
+    --borde:#D7DEE6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0; background:#e9edf1; color:#222;
+  }
+  .app{
+    display:flex; gap:20px; padding:20px; align-items:flex-start;
+  }
+  .panel{
+    background:#fff; border-radius:10px; padding:18px 20px;
+    width:400px; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,.08);
+    max-height:calc(100vh - 40px); overflow-y:auto; position:sticky; top:20px;
+  }
+  .panel h2{font-size:15px; color:var(--medianoche); margin:18px 0 8px; border-bottom:2px solid var(--oro); padding-bottom:4px;}
+  .panel h2:first-child{margin-top:0;}
+  label{display:block; font-size:11px; font-weight:bold; color:var(--gris-txt); margin:8px 0 2px;}
+  input[type=text], input[type=number], input[type=date], select, textarea{
+    width:100%; padding:6px 8px; font-size:13px; border:1px solid #ccd3da; border-radius:5px;
+    font-family:inherit;
+  }
+  textarea{resize:vertical; min-height:44px;}
+  .row2{display:flex; gap:8px;}
+  .row2>div{flex:1;}
+  button{
+    cursor:pointer; border:none; border-radius:6px; font-size:13px; font-weight:bold;
+    padding:9px 14px;
+  }
+  .btn-primary{background:var(--medianoche); color:#fff; width:100%; margin-top:14px;}
+  .btn-primary:hover{background:var(--chatham);}
+  .btn-secondary{background:var(--gris-claro); color:var(--medianoche); width:100%; margin-top:8px;}
+  .item-row{border:1px solid var(--borde); border-radius:6px; padding:8px; margin-bottom:8px; position:relative;}
+  .item-row .rm{position:absolute; top:4px; right:4px; background:none; color:var(--rojo); font-size:16px; padding:0 6px;}
+  .hint{font-size:10.5px; color:var(--gris-txt); margin-top:2px; line-height:1.4;}
+
+  /* ============ INVOICE PREVIEW ============ */
+  .invoice-wrap{flex:1; display:flex; justify-content:center;}
+  #invoice{
+    width:800px; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,.15);
+    padding:0 0 20px 0;
+  }
+  .inv-header{
+    background:var(--medianoche); color:#fff; padding:22px 28px 16px;
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .inv-header img{height:52px; display:block;}
+  .inv-tag{color:var(--azul); font-size:10px; font-weight:bold; margin-top:8px; letter-spacing:.5px;}
+  .inv-title{font-size:30px; font-weight:bold; text-align:right; letter-spacing:1px;}
+  .inv-subtitle{color:var(--azul); font-size:11px; text-align:right; margin-top:2px;}
+  .meta-strip{
+    background:var(--chatham); color:#fff; display:flex;
+  }
+  .meta-cell{flex:1; padding:8px 16px; border-right:1px solid rgba(255,255,255,.12);}
+  .meta-cell:last-child{border-right:none;}
+  .meta-cell .lbl{font-size:9px; color:var(--azul); font-weight:bold;}
+  .meta-cell .val{font-size:13px; font-weight:bold; margin-top:2px;}
+  .meta-cell.estado .val{color:#6FE39B;}
+  .meta-cell.factura .val{color:var(--oro);}
+
+  .legal-box{
+    margin:16px 28px 0; background:var(--gris-claro); border:1px solid var(--azul);
+    border-left:5px solid var(--azul); border-radius:3px; padding:10px 14px; font-size:10.5px; color:#222;
+  }
+  .legal-box b{color:var(--medianoche); display:block; margin-bottom:4px; font-size:11px;}
+
+  .cards{display:flex; gap:20px; margin:18px 28px 0;}
+  .card{flex:1; border:1px solid var(--borde); border-radius:4px; overflow:hidden;}
+  .card h3{
+    margin:0; background:#fff; color:var(--medianoche); font-size:12.5px; padding:8px 10px 6px;
+    border-bottom:3px solid var(--oro);
+  }
+  .card .f{display:flex; padding:6px 10px; font-size:11.5px; border-top:1px solid var(--borde);}
+  .card .f:first-of-type{border-top:none;}
+  .card .f .fl{width:42%; color:var(--gris-txt); font-weight:bold;}
+  .card .f .fv{width:58%; word-break:break-word;}
+
+  .svc-title{margin:18px 28px 6px; font-size:13px; font-weight:bold; color:var(--medianoche);}
+  table.svc{width:calc(100% - 56px); margin:0 28px; border-collapse:collapse; font-size:11px;}
+  table.svc th{background:var(--medianoche); color:#fff; padding:7px 6px; font-size:10px; text-align:center;}
+  table.svc td{border:1px solid var(--borde); padding:6px 7px; vertical-align:top;}
+  table.svc td.num{text-align:right;}
+  table.svc td.center{text-align:center;}
+
+  .bottom{display:flex; gap:20px; margin:14px 28px 0;}
+  .conf-box{flex:1.1; background:var(--verde-bg); border:1px solid #BFE6CC; border-radius:4px; padding:10px 14px; font-size:11px;}
+  .conf-box .t{color:var(--verde-txt); font-weight:bold; margin-bottom:4px;}
+  .tot-box{flex:1; }
+  .tot-row{display:flex; justify-content:space-between; padding:6px 10px; font-size:11.5px; border:1px solid var(--borde); border-top:none;}
+  .tot-row:first-child{border-top:1px solid var(--borde);}
+  .tot-row .l{font-weight:bold;}
+  .tot-row .v{font-weight:bold;}
+  .tot-row.total{background:var(--medianoche); color:#fff; font-size:13px;}
+  .tot-row.neg .v{color:var(--rojo);}
+
+  .footer{text-align:center; font-size:9.5px; color:var(--gris-txt); margin:18px 28px 0;}
+
+  @media print{
+    body{background:#fff;}
+    .panel{display:none;}
+    .app{padding:0; display:block;}
+    .invoice-wrap{display:block;}
+    #invoice{box-shadow:none; width:100%; margin:0;}
+    @page{margin:8mm;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ FORM PANEL ============ -->
+  <div class="panel no-print">
+    <h2>País / Formato</h2>
+    <select id="pais" onchange="render()">
+      <option value="MX">México</option>
+      <option value="CO">Colombia</option>
+      <option value="AR">Argentina</option>
+    </select>
+
+    <h2>Datos de la factura</h2>
+    <label>N° de Voucher / Certificado</label>
+    <input type="text" id="voucher" placeholder="Ej. CER202608056101MXE" oninput="render()">
+    <div class="hint">El N° de factura se arma solo con este código (año+mes+4 dígitos+país).</div>
+    <label>Fecha de Emisión</label>
+    <input type="date" id="fecha" onchange="render()">
+
+    <h2>Cliente / Receptor</h2>
+    <label id="lbl_razon">Razón Social</label>
+    <input type="text" id="razon" oninput="render()">
+    <label id="lbl_idfiscal">RFC</label>
+    <input type="text" id="idfiscal" oninput="render()">
+    <label>Domicilio Fiscal</label>
+    <textarea id="domicilio" oninput="render()"></textarea>
+    <label id="lbl_extra" style="display:none">Régimen Fiscal</label>
+    <input type="text" id="extra" style="display:none" oninput="render()">
+    <label>Pasajero Beneficiario</label>
+    <input type="text" id="pasajero" oninput="render()">
+    <label>Documento ID</label>
+    <input type="text" id="docid" oninput="render()">
+    <label>Correo Electrónico</label>
+    <input type="text" id="correo" oninput="render()">
+
+    <h2>Detalle del servicio</h2>
+    <div id="items"></div>
+    <button class="btn-secondary" onclick="addItem()">+ Agregar línea</button>
+
+    <h2>Totales / Pago</h2>
+    <div class="row2">
+      <div><label>Impuestos</label><input type="number" id="impuestos" value="0" oninput="render()"></div>
+      <div><label>Forma de Pago</label><input type="text" id="formapago" value="Tarjeta de Crédito" oninput="render()"></div>
+    </div>
+    <label>Moneda</label>
+    <input type="text" id="moneda" value="Pesos Mexicanos (MXN)" oninput="render()">
+
+    <button class="btn-primary" onclick="window.print()">🖨️ Imprimir / Exportar PDF</button>
+  </div>
+
+  <!-- ============ INVOICE PREVIEW ============ -->
+  <div class="invoice-wrap">
+    <div id="invoice">
+      <div class="inv-header">
+        <div>
+          <img id="logoImg" src="seguros_fly_logo_white.png" onerror="this.style.display='none'">
+          <div class="inv-tag">PROTECCIÓN SIN FRONTERAS</div>
+        </div>
+        <div>
+          <div class="inv-title">INVOICE</div>
+          <div class="inv-subtitle">FACTURA COMERCIAL INTERNACIONAL</div>
+        </div>
+      </div>
+      <div class="meta-strip">
+        <div class="meta-cell factura"><div class="lbl">N° FACTURA</div><div class="val" id="out_invnum">—</div></div>
+        <div class="meta-cell"><div class="lbl">FECHA EMISIÓN</div><div class="val" id="out_fecha">—</div></div>
+        <div class="meta-cell"><div class="lbl">N° VOUCHER</div><div class="val" id="out_voucher">—</div></div>
+        <div class="meta-cell estado"><div class="lbl">ESTADO</div><div class="val">PAGADO</div></div>
+      </div>
+
+      <div class="legal-box">
+        <b id="out_legaltitle"></b>
+        <span id="out_legalbody"></span>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>EMISOR / PROVEEDOR INTERNACIONAL</h3>
+          <div class="f"><div class="fl">Razón Social:</div><div class="fv">FLY GROUP CORP</div></div>
+          <div class="f"><div class="fl">Marca Comercial:</div><div class="fv">SegurosFly.com</div></div>
+          <div class="f"><div class="fl">Tax ID / EIN:</div><div class="fv">36-5152831</div></div>
+          <div class="f"><div class="fl">Jurisdicción:</div><div class="fv">State of Texas, USA</div></div>
+          <div class="f"><div class="fl">Domicilio:</div><div class="fv">8352 Bristlecone Pine Way, Magnolia, TX 77354</div></div>
+          <div class="f"><div class="fl">Contacto:</div><div class="fv">info@segurosfly.com</div></div>
+        </div>
+        <div class="card">
+          <h3 id="out_cardtitle">RECEPTOR / CLIENTE</h3>
+          <div class="f"><div class="fl" id="out_lbl_razon">Razón Social:</div><div class="fv" id="out_razon">—</div></div>
+          <div class="f"><div class="fl" id="out_lbl_idfiscal">RFC:</div><div class="fv" id="out_idfiscal">—</div></div>
+          <div class="f"><div class="fl">Domicilio Fiscal:</div><div class="fv" id="out_domicilio">—</div></div>
+          <div class="f" id="row_extra" style="display:none"><div class="fl" id="out_lbl_extra"></div><div class="fv" id="out_extra"></div></div>
+          <div class="f"><div class="fl">Pasajero:</div><div class="fv" id="out_pasajero">—</div></div>
+          <div class="f"><div class="fl">Documento ID:</div><div class="fv" id="out_docid">—</div></div>
+          <div class="f"><div class="fl">Correo:</div><div class="fv" id="out_correo">—</div></div>
+        </div>
+      </div>
+
+      <div class="svc-title">DETALLE DEL SERVICIO DE ASISTENCIA</div>
+      <table class="svc">
+        <thead><tr><th style="width:12%">Código</th><th style="width:48%">Descripción del Servicio</th><th style="width:8%">Cant.</th><th style="width:16%">Valor Unitario</th><th style="width:16%">Total</th></tr></thead>
+        <tbody id="out_items"></tbody>
+      </table>
+
+      <div class="bottom">
+        <div class="conf-box">
+          <div class="t">✓ COMPROBANTE DE PAGO CONFIRMADO</div>
+          <div>Forma de Pago: <span id="out_formapago"></span><br>Moneda: <span id="out_moneda"></span><br>Este comprobante se emite como constancia de liquidación total del servicio de asistencia en viaje contratado.</div>
+        </div>
+        <div class="tot-box">
+          <div class="tot-row"><div class="l">Subtotal (líneas de servicio):</div><div class="v" id="out_subtotal">0.00</div></div>
+          <div class="tot-row"><div class="l">Impuestos:</div><div class="v" id="out_impuestos">0.00</div></div>
+          <div class="tot-row total"><div class="l">TOTAL NETO PAGADO:</div><div class="v" id="out_total">0.00</div></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        SegurosFly.com — Marca de Fly Group Corp | Houston, Texas, USA | Asistencia 24/7: +1 936 548 6775 | emergencias@segurosfly.com
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LEGAL = {
+  MX: {
+    idLabel: "RFC / Tax ID:", country:"MÉXICO", suf:"MX",
+    title:"Sustento Fiscal para Deducibilidad en México:",
+    body:"Factura Comercial emitida por FLY GROUP CORP (Texas, EE. UU., Tax ID EIN 36-5152831), sin residencia fiscal ni establecimiento permanente en México. Conforme a la Regla 2.7.1.14 de la Resolución Miscelánea Fiscal (RMF) vigente, este comprobante reúne los datos necesarios para respaldar la deducibilidad del gasto ante el SAT. Recomendamos confirmar la regla vigente con su asesor contable.",
+    extraLabel:"Régimen Fiscal:"
+  },
+  CO: {
+    idLabel: "NIT / Id. Fiscal:", country:"COLOMBIA", suf:"CO",
+    title:"Sustento Fiscal para Deducibilidad en Colombia:",
+    body:"Factura Comercial emitida por FLY GROUP CORP (Texas, EE. UU., Tax ID EIN 36-5152831), sin residencia fiscal ni establecimiento permanente en Colombia. El adquirente corporativo puede legalizar este gasto ante la DIAN mediante el mecanismo de Documento Soporte en adquisiciones efectuadas a sujetos no obligados a expedir factura de venta (Decreto 358 de 2020 / Estatuto Tributario). Recomendamos confirmar el tratamiento con su asesor contable.",
+    extraLabel:null
+  },
+  AR: {
+    idLabel: "CUIT / Id. Fiscal:", country:"ARGENTINA", suf:"AR",
+    title:"Tratamiento Fiscal en Argentina — Servicio de Proveedor del Exterior:",
+    body:"Factura Comercial emitida por FLY GROUP CORP (Texas, EE. UU., Tax ID EIN 36-5152831), sin residencia fiscal ni establecimiento permanente en Argentina. A diferencia de México/Colombia, en Argentina el tratamiento de pagos a beneficiarios del exterior involucra normas propias de AFIP/ARCA (posible retención de Impuesto a las Ganancias sobre renta de fuente argentina y/o IVA por servicios digitales, según el caso). Este comprobante es el respaldo comercial de la operación; recomendamos confirmar con su contador el tratamiento y las eventuales retenciones aplicables antes de deducir el gasto.",
+    extraLabel:null
+  }
+};
+
+let items = [
+  {codigo:"SF-MAX-103", desc:"Servicio de Asistencia Internacional al Viajero - Plan Max (103 días). Trayecto: México → Europa y Mediterráneo. Vigencia: 21/08/2026 al 01/12/2026.", cant:1, valor:7374},
+  {codigo:"Descuento", desc:"Descuento Especial Aplicado (65%)", cant:1, valor:-4793}
+];
+
+function addItem(){
+  items.push({codigo:"", desc:"", cant:1, valor:0});
+  renderForm();
+  render();
+}
+function removeItem(i){
+  items.splice(i,1);
+  renderForm();
+  render();
+}
+function updateItem(i, field, val){
+  items[i][field] = val;
+  render();
+}
+
+function renderForm(){
+  const c = document.getElementById('items');
+  c.innerHTML = items.map((it,i)=>`
+    <div class="item-row">
+      <button class="rm" onclick="removeItem(${i})" title="Eliminar">✕</button>
+      <label>Código</label>
+      <input type="text" value="${it.codigo}" oninput="updateItem(${i},'codigo',this.value)">
+      <label>Descripción</label>
+      <textarea oninput="updateItem(${i},'desc',this.value)">${it.desc}</textarea>
+      <div class="row2">
+        <div><label>Cant.</label><input type="number" value="${it.cant}" oninput="updateItem(${i},'cant',this.value)"></div>
+        <div><label>Valor Unitario</label><input type="number" value="${it.valor}" oninput="updateItem(${i},'valor',this.value)"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function fmt(n){
+  n = Number(n)||0;
+  return n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function invoiceNumber(voucher, suf){
+  if(!voucher || voucher.length < 15) return "Pendiente";
+  const yyyy = voucher.substring(3,7);
+  const mm = voucher.substring(7,9);
+  const seq = voucher.substring(11,15);
+  return `INV-${yyyy}${mm}-${seq}${suf}`;
+}
+
+function render(){
+  const pais = document.getElementById('pais').value;
+  const cfg = LEGAL[pais];
+
+  document.getElementById('lbl_idfiscal').textContent = cfg.idLabel;
+  document.getElementById('out_lbl_idfiscal').textContent = cfg.idLabel;
+  document.getElementById('out_cardtitle').textContent = "RECEPTOR / CLIENTE (" + cfg.country + ")";
+  document.getElementById('out_legaltitle').textContent = cfg.title;
+  document.getElementById('out_legalbody').textContent = cfg.body;
+
+  const extraRow = document.getElementById('row_extra');
+  const lblExtra = document.getElementById('lbl_extra');
+  const inpExtra = document.getElementById('extra');
+  if(cfg.extraLabel){
+    extraRow.style.display = 'flex';
+    lblExtra.style.display = 'block';
+    inpExtra.style.display = 'block';
+    lblExtra.textContent = cfg.extraLabel;
+    document.getElementById('out_lbl_extra').textContent = cfg.extraLabel;
+    document.getElementById('out_extra').textContent = inpExtra.value || '—';
+  } else {
+    extraRow.style.display = 'none';
+    lblExtra.style.display = 'none';
+    inpExtra.style.display = 'none';
+  }
+
+  const voucher = document.getElementById('voucher').value.trim();
+  document.getElementById('out_voucher').textContent = voucher || '—';
+  document.getElementById('out_invnum').textContent = invoiceNumber(voucher, cfg.suf);
+
+  const fecha = document.getElementById('fecha').value;
+  document.getElementById('out_fecha').textContent = fecha ? new Date(fecha+'T00:00:00').toLocaleDateString('es-MX') : '—';
+
+  document.getElementById('out_razon').textContent = document.getElementById('razon').value || '—';
+  document.getElementById('out_idfiscal').textContent = document.getElementById('idfiscal').value || '—';
+  document.getElementById('out_domicilio').textContent = document.getElementById('domicilio').value || '—';
+  document.getElementById('out_pasajero').textContent = document.getElementById('pasajero').value || '—';
+  document.getElementById('out_docid').textContent = document.getElementById('docid').value || '—';
+  document.getElementById('out_correo').textContent = document.getElementById('correo').value || '—';
+  document.getElementById('out_formapago').textContent = document.getElementById('formapago').value || '—';
+  document.getElementById('out_moneda').textContent = document.getElementById('moneda').value || '—';
+
+  const rows = items.map(it=>{
+    const total = (Number(it.cant)||0) * (Number(it.valor)||0);
+    return `<tr>
+      <td class="center">${it.codigo||''}</td>
+      <td>${(it.desc||'').replace(/\n/g,'<br>')}</td>
+      <td class="center">${it.cant||''}</td>
+      <td class="num">${fmt(it.valor)}</td>
+      <td class="num">${fmt(total)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('out_items').innerHTML = rows;
+
+  const subtotal = items.reduce((s,it)=> s + (Number(it.cant)||0)*(Number(it.valor)||0), 0);
+  const impuestos = Number(document.getElementById('impuestos').value)||0;
+  const total = subtotal + impuestos;
+  document.getElementById('out_subtotal').textContent = fmt(subtotal);
+  document.getElementById('out_impuestos').textContent = fmt(impuestos);
+  document.getElementById('out_total').textContent = fmt(total);
+}
+
+// --- Demo data prefill (edítalo o bórralo para empezar en blanco) ---
+document.getElementById('voucher').value = "CER202608056101MXE";
+document.getElementById('fecha').value = "2026-08-11";
+document.getElementById('razon').value = "SERVICIOS PEDAGOGICOS CONTABLES Y ADMINISTRATIVOS";
+document.getElementById('idfiscal').value = "SPC8904102ZA";
+document.getElementById('domicilio').value = "Calle Manzano # 34-C, Colonia Florida, CP 01030, Alcaldía Álvaro Obregón, Ciudad de México, México";
+document.getElementById('extra').value = "[PENDIENTE - confirmar clave de Régimen Fiscal]";
+document.getElementById('pasajero').value = "Oliverio Carbajal Zaragoza";
+document.getElementById('docid').value = "PASS N0855990";
+document.getElementById('correo').value = "seamel@amel.org.mx";
+document.getElementById('moneda').value = "Pesos Mexicanos (MXN)";
+
+renderForm();
+render();
+</script>
+</body>
+</html>
