@@ -60,16 +60,26 @@
   #invoice{
     width:800px; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,.15);
     padding:0 0 20px 0;
+    display:flex; flex-direction:column;
   }
   .inv-header{
-    background:#fff; color:var(--medianoche); padding:22px 28px 16px;
-    display:flex; justify-content:space-between; align-items:flex-start;
+    background:#fff; color:var(--medianoche); padding:28px 32px 22px;
+    display:flex; justify-content:space-between; align-items:center;
     border-bottom:3px solid var(--oro);
   }
-  .inv-header img{height:52px; display:block;}
-  .inv-tag{color:var(--azul); font-size:10px; font-weight:bold; margin-top:8px; letter-spacing:.5px;}
-  .inv-title{font-size:30px; font-weight:bold; text-align:right; letter-spacing:1px; color:var(--medianoche);}
-  .inv-subtitle{color:var(--azul); font-size:11px; text-align:right; margin-top:2px;}
+  .inv-header img{height:81px; display:block;}
+  .inv-tag{
+    color:var(--azul); font-size:11px; font-weight:bold; margin-top:12px;
+    letter-spacing:2px; text-transform:uppercase; padding-left:14px;
+    border-left:2px solid var(--oro);
+  }
+  .inv-title{
+    font-size:15px; font-weight:800; text-align:right; letter-spacing:1px;
+    color:var(--medianoche); line-height:1.25; max-width:260px; margin-left:auto;
+  }
+  .inv-title-rule{
+    width:60px; height:3px; background:var(--oro); margin:8px 0 0 auto;
+  }
   .meta-strip{
     background:var(--chatham); color:#fff; display:flex;
   }
@@ -115,15 +125,16 @@
   .tot-row.total{background:var(--medianoche); color:#fff; font-size:13px;}
   .tot-row.neg .v{color:var(--rojo);}
 
-  .footer{text-align:center; font-size:9.5px; color:var(--gris-txt); margin:18px 28px 0;}
+  .inv-body{flex:1;}
+  .footer{text-align:center; font-size:9.5px; color:var(--gris-txt); margin:18px 28px 0; padding-top:18px;}
 
   @media print{
     body{background:#fff;}
     .panel{display:none;}
     .app{padding:0; display:block;}
     .invoice-wrap{display:block;}
-    #invoice{box-shadow:none; width:100%; margin:0;}
-    @page{margin:8mm;}
+    #invoice{box-shadow:none; width:100%; margin:0; min-height:263mm;}
+    @page{size:letter; margin:8mm;}
   }
 </style>
 </head>
@@ -189,10 +200,11 @@
           <div class="inv-tag">PROTECCIÓN SIN FRONTERAS</div>
         </div>
         <div>
-          <div class="inv-title">INVOICE</div>
-          <div class="inv-subtitle">FACTURA COMERCIAL INTERNACIONAL</div>
+          <div class="inv-title">FACTURA COMERCIAL<br>INTERNACIONAL</div>
+          <div class="inv-title-rule"></div>
         </div>
       </div>
+      <div class="inv-body">
       <div class="meta-strip">
         <div class="meta-cell factura"><div class="lbl">N° FACTURA</div><div class="val" id="out_invnum">—</div></div>
         <div class="meta-cell"><div class="lbl">FECHA EMISIÓN</div><div class="val" id="out_fecha">—</div></div>
@@ -243,6 +255,7 @@
           <div class="tot-row"><div class="l">Impuestos:</div><div class="v" id="out_impuestos">0.00</div></div>
           <div class="tot-row total"><div class="l">TOTAL NETO PAGADO:</div><div class="v" id="out_total">0.00</div></div>
         </div>
+      </div>
       </div>
 
       <div class="footer">
