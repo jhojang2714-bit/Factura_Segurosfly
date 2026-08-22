@@ -148,6 +148,73 @@
     </div>
   </div>
 
+  <div class="card">
+    <div class="section">
+      <h2>3. Cómo llenar el "Detalle del Servicio de Asistencia"</h2>
+      <p>Esta es la parte que más se presta a confusión porque toca leer el certificado/voucher del cliente y traducirlo a una línea de factura. La info sale de dos partes del PDF del certificado: la página de cada pasajero ("Datos de viaje" + "Beneficios del plan") y la página final "Resumen y recibo".</p>
+
+      <table>
+        <tr><th style="width:16%">Columna</th><th>De dónde sale</th></tr>
+        <tr>
+          <td><b>Código</b></td>
+          <td>Se arma así: <code>SF-[PLAN]-[DÍAS]D</code>. El plan sale de "Beneficios del plan: Plan ___" (Básica, Plus, Premium, Max...) y los días de "Días cotizados" en el recibo. Ej.: Plan Max, 16 días → <code>SF-MAX-16D</code>. Plan Plus, 18 días → <code>SF-PLUS-18D</code>.</td>
+        </tr>
+        <tr>
+          <td><b>Descripción</b></td>
+          <td>Redacta en viñetas cortas con lo esencial: (1) nombre del plan y que es asistencia internacional al viajero, (2) la vigencia en días, (3) el trayecto — "Datos de viaje: Origen → Destino", (4) las fechas del viaje ("Fechas: AAAA-MM-DD → AAAA-MM-DD"), y (5) el N° de certificado/voucher. Si el certificado tiene upgrades especiales (ej. Cancelación Multi Causa, Tech Protection), agrégalos como una línea aparte en la tabla, no dentro de esta descripción.
+            <div class="hint-box" style="margin-top:10px;">
+              <b>¿Nombres de los pasajeros en la descripción?</b> Ni DIAN, ni el SAT, ni AFIP exigen que la factura enumere a los beneficiarios del servicio — piden identificar a quien paga (el Receptor) y describir el servicio. El N° de certificado ya es la referencia verificable a los nombres y documentos completos. Con eso en mente:
+              <ul style="margin-top:6px;">
+                <li><b>1-2 pasajeros:</b> sí incluye los nombres — da contexto inmediato sin saturar la factura.</li>
+                <li><b>3 o más pasajeros:</b> no listes todos los nombres ni documentos; escribe solo la cantidad y "Ver certificado N° ___ para el detalle de pasajeros". Así evitas una descripción larguísima y evitas exponer datos personales de varias personas en un documento que después circula con contadores o bancos.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Cant.</b></td>
+          <td>Es el número de pasajeros cubiertos por ese certificado — lo ves en "Pasajeros: N personas" (dentro de "Datos de viaje") o en "Pasajeros: Adultos (0-65 años) xN" del recibo. <b>Un certificado puede amparar a varias personas</b> (ej. una familia de 4): ahí cantidad = 4, aunque solo haya un N° de voucher.</td>
+        </tr>
+        <tr>
+          <td><b>Precio Lista</b></td>
+          <td>Es el <b>Subtotal</b> que aparece en "Resumen y recibo" (el valor de "Adultos (0-65 años) xN", ya sumado para todos los pasajeros) — no lo vuelvas a multiplicar. Si te preguntan por el valor unitario (por persona), es ese Subtotal ÷ Cantidad.</td>
+        </tr>
+      </table>
+
+      <div class="hint-box">
+        <b>Descuentos y upgrades van en líneas aparte</b>, no mezclados en la descripción del plan: una línea "Descuento Promocional (X%) + Cupón (Y%)" con el valor <b>negativo</b> igual a "Total descuentos" del recibo, y si hay upgrades pagados aparte, una línea "Upgrades: [nombres]" con el valor de "Upgrades" del recibo. El Total Pagado de la factura debe cuadrar exacto con el "Total a pagar" del recibo del certificado.
+      </div>
+
+      <div class="country-title"><span class="flag-chip">EJEMPLO 1 — 2 pasajeros (Argentina)</span></div>
+      <p>Certificado <code>CER202608076208ARU</code>, Plan Max, 16 días, Argentina → Estados Unidos, 30/08/2026 al 14/09/2026, 2 pasajeros (Jorge Eduardo Cazorro y Carmen Viviana Cuozzo). Recibo: Subtotal USD 434.46, Descuentos -USD 320.41, Upgrades +USD 96.92, Total USD 210.97.</p>
+      <table>
+        <tr><th>Código</th><th>Descripción</th><th>Cant.</th><th>Precio Lista</th></tr>
+        <tr>
+          <td>SF-MAX-16D</td>
+          <td>• Plan Max — Asistencia Internacional al Viajero (16 días)<br>• Pasajeros: Jorge Eduardo Cazorro (PASS AAJ541529) y Carmen Viviana Cuozzo (PASS YC7732421)<br>• Trayecto: Argentina → Estados Unidos. Vigencia: 30/08/2026 al 14/09/2026<br>• Certificado/Voucher: CER202608076208ARU</td>
+          <td>2</td>
+          <td>USD 434.46</td>
+        </tr>
+        <tr><td>Upgrades</td><td>Cancelación Multi Causa, Tech Protection, Enf. Preexistente Max</td><td>1</td><td>USD 96.92</td></tr>
+        <tr><td>Descuento</td><td>Descuento Promocional (65%) + Cupón Descuento25 (25%)</td><td>1</td><td>-USD 320.41</td></tr>
+      </table>
+
+      <div class="country-title"><span class="flag-chip">EJEMPLO 2 — 4 pasajeros (Colombia)</span></div>
+      <p>Certificado <code>CER202606144260COE</code>, Plan Plus, 18 días, Colombia → Europa y Mediterráneo, 17/12/2026 al 03/01/2027, 4 pasajeros (familia Serrano Sánchez). Recibo: Subtotal COP 2.757.888, Descuentos -COP 2.033.942, Total COP 723.946 (sin upgrades en este caso).</p>
+      <table>
+        <tr><th>Código</th><th>Descripción</th><th>Cant.</th><th>Precio Lista</th></tr>
+        <tr>
+          <td>SF-PLUS-18D</td>
+          <td>• Plan Plus — Asistencia Internacional al Viajero (18 días)<br>• Pasajeros: 4 personas — ver certificado CER202606144260COE para el detalle de nombres y documentos<br>• Trayecto: Colombia → Europa y Mediterráneo. Vigencia: 17/12/2026 al 03/01/2027<br>• Certificado/Voucher: CER202606144260COE</td>
+          <td>4</td>
+          <td>COP 2.757.888</td>
+        </tr>
+        <tr><td>Descuento</td><td>Descuento Promocional (65%) + Cupón Descuento25 (25%)</td><td>1</td><td>-COP 2.033.942</td></tr>
+      </table>
+      <p style="font-size:12.5px; color:var(--gris-txt);">Con 4 pasajeros ya no se listan los nombres individuales (regla de arriba) — solo la cantidad y la referencia al certificado, que es donde vive el detalle completo de cada persona.</p>
+    </div>
+  </div>
+
   <footer>SegurosFly.com — Marca de Fly Group Corp | Houston, Texas, USA</footer>
 </div>
 </body>
