@@ -276,7 +276,7 @@ const LEGAL = {
 
 let items = [
   {codigo:"SF-MAX-103", desc:"Servicio de Asistencia Internacional al Viajero - Plan Max (103 días). Trayecto: México → Europa y Mediterráneo. Vigencia: 21/08/2026 al 01/12/2026.", cant:1, valor:7374},
-  {codigo:"Descuento", desc:"Descuento Especial Aplicado (65%)", cant:1, valor:-4793}
+  {codigo:"Des_65%", desc:"Descuento Especial Aplicado (65%)", pct:65}
 ];
 
 function addItem(){
@@ -294,21 +294,55 @@ function updateItem(i, field, val){
   render();
 }
 
+function isDiscountRow(it){
+  const c = (it.codigo||'').trim();
+  return /^des_/i.test(c) || /^descuento/i.test(c);
+}
+
+function computeRows(){
+  let running = 0;
+  return items.map(it=>{
+    const isDisc = isDiscountRow(it);
+    let total;
+    if(isDisc){
+      const pct = Math.min(90, Math.max(5, Number(it.pct)||0));
+      total = -(running * pct/100);
+    } else {
+      total = (Number(it.cant)||0) * (Number(it.valor)||0);
+    }
+    running += total;
+    return Object.assign({}, it, { isDisc, total, runningBefore: running - total });
+  });
+}
+
 function renderForm(){
   const c = document.getElementById('items');
-  c.innerHTML = items.map((it,i)=>`
-    <div class="item-row">
-      <button class="rm" onclick="removeItem(${i})" title="Eliminar">✕</button>
-      <label>Código</label>
-      <input type="text" value="${it.codigo}" oninput="updateItem(${i},'codigo',this.value)">
-      <label>Descripción</label>
-      <textarea oninput="updateItem(${i},'desc',this.value)">${it.desc}</textarea>
+  const rows = computeRows();
+  c.innerHTML = items.map((it,i)=>{
+    const r = rows[i];
+    const discBlock = `
+      <label>% Descuento (5 a 90)</label>
+      <input type="number" min="5" max="90" step="1" value="${it.pct||''}" placeholder="ej. 65" oninput="updateItem(${i},'pct',this.value)" onchange="renderForm()">
+      <div class="hint">Se aplica sobre el subtotal acumulado hasta esta línea (${fmt(r.runningBefore)}) → resta ${fmt(Math.abs(r.total))}.</div>
+    `;
+    const normalBlock = `
       <div class="row2">
         <div><label>Cant.</label><input type="number" value="${it.cant}" oninput="updateItem(${i},'cant',this.value)"></div>
         <div><label>Valor Unitario</label><input type="number" value="${it.valor}" oninput="updateItem(${i},'valor',this.value)"></div>
       </div>
+    `;
+    return `
+    <div class="item-row">
+      <button class="rm" onclick="removeItem(${i})" title="Eliminar">✕</button>
+      <label>Código</label>
+      <input type="text" value="${it.codigo}" placeholder="ej. SF-MAX-16D o Des_65%" oninput="updateItem(${i},'codigo',this.value)" onchange="renderForm()">
+      <div class="hint">Tip: si el código empieza con "Des_" (ej. Des_65%), la línea se calcula sola como descuento.</div>
+      <label>Descripción</label>
+      <textarea oninput="updateItem(${i},'desc',this.value)">${it.desc}</textarea>
+      ${r.isDisc ? discBlock : normalBlock}
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function fmt(n){
@@ -366,19 +400,21 @@ function render(){
   document.getElementById('out_formapago').textContent = document.getElementById('formapago').value || '—';
   document.getElementById('out_moneda').textContent = document.getElementById('moneda').value || '—';
 
-  const rows = items.map(it=>{
-    const total = (Number(it.cant)||0) * (Number(it.valor)||0);
+  const computed = computeRows();
+  const rows = computed.map(it=>{
+    const cantCell = it.isDisc ? '—' : (it.cant||'');
+    const valorCell = it.isDisc ? `${Math.min(90,Math.max(5,Number(it.pct)||0))}%` : fmt(it.valor);
     return `<tr>
       <td class="center">${it.codigo||''}</td>
       <td>${(it.desc||'').replace(/\n/g,'<br>')}</td>
-      <td class="center">${it.cant||''}</td>
-      <td class="num">${fmt(it.valor)}</td>
-      <td class="num">${fmt(total)}</td>
+      <td class="center">${cantCell}</td>
+      <td class="num">${valorCell}</td>
+      <td class="num">${fmt(it.total)}</td>
     </tr>`;
   }).join('');
   document.getElementById('out_items').innerHTML = rows;
 
-  const subtotal = items.reduce((s,it)=> s + (Number(it.cant)||0)*(Number(it.valor)||0), 0);
+  const subtotal = computed.reduce((s,it)=> s + it.total, 0);
   const impuestos = Number(document.getElementById('impuestos').value)||0;
   const total = subtotal + impuestos;
   document.getElementById('out_subtotal').textContent = fmt(subtotal);
@@ -400,7 +436,7 @@ function loadDemoData(){
   document.getElementById('moneda').value = "Pesos Mexicanos (MXN)";
   items = [
     {codigo:"SF-MAX-103", desc:"Servicio de Asistencia Internacional al Viajero - Plan Max (103 días). Trayecto: México → Europa y Mediterráneo. Vigencia: 21/08/2026 al 01/12/2026.", cant:1, valor:7374},
-    {codigo:"Descuento", desc:"Descuento Especial Aplicado (65%)", cant:1, valor:-4793}
+    {codigo:"Des_65%", desc:"Descuento Especial Aplicado (65%)", pct:65}
   ];
 }
 
