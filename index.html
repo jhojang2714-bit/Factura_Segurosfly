@@ -149,7 +149,9 @@
       <option value="MX">México</option>
       <option value="CO">Colombia</option>
       <option value="AR">Argentina</option>
+      <option value="US">Estados Unidos</option>
     </select>
+    <div class="hint">Al elegir Estados Unidos, la vista previa e impresión de la factura cambian automáticamente a inglés.</div>
     <button class="btn-secondary" style="margin-top:10px; color:var(--rojo);" onclick="clearAll()">🗑️ Borrar datos / Nueva factura</button>
 
     <h2>Datos de la factura</h2>
@@ -200,16 +202,16 @@
           <div class="inv-tag">PROTECCIÓN SIN FRONTERAS</div>
         </div>
         <div>
-          <div class="inv-title">FACTURA COMERCIAL<br>INTERNACIONAL</div>
+          <div class="inv-title" id="out_title">FACTURA COMERCIAL<br>INTERNACIONAL</div>
           <div class="inv-title-rule"></div>
         </div>
       </div>
       <div class="inv-body">
       <div class="meta-strip">
-        <div class="meta-cell factura"><div class="lbl">N° FACTURA</div><div class="val" id="out_invnum">—</div></div>
-        <div class="meta-cell"><div class="lbl">FECHA EMISIÓN</div><div class="val" id="out_fecha">—</div></div>
-        <div class="meta-cell"><div class="lbl">N° VOUCHER</div><div class="val" id="out_voucher">—</div></div>
-        <div class="meta-cell estado"><div class="lbl">ESTADO</div><div class="val">PAGADO</div></div>
+        <div class="meta-cell factura"><div class="lbl" id="out_lbl_factura">N° FACTURA</div><div class="val" id="out_invnum">—</div></div>
+        <div class="meta-cell"><div class="lbl" id="out_lbl_fecha">FECHA EMISIÓN</div><div class="val" id="out_fecha">—</div></div>
+        <div class="meta-cell"><div class="lbl" id="out_lbl_voucher">N° VOUCHER</div><div class="val" id="out_voucher">—</div></div>
+        <div class="meta-cell estado"><div class="lbl" id="out_lbl_estado">ESTADO</div><div class="val" id="out_val_pagado">PAGADO</div></div>
       </div>
 
       <div class="legal-box">
@@ -219,46 +221,46 @@
 
       <div class="cards">
         <div class="card">
-          <h3>EMISOR / PROVEEDOR INTERNACIONAL</h3>
-          <div class="f"><div class="fl">Razón Social:</div><div class="fv">FLY GROUP CORP</div></div>
-          <div class="f"><div class="fl">Marca Comercial:</div><div class="fv">SegurosFly.com</div></div>
+          <h3 id="out_emisortitle">EMISOR / PROVEEDOR INTERNACIONAL</h3>
+          <div class="f"><div class="fl" id="out_lbl_razon_emisor">Razón Social:</div><div class="fv">FLY GROUP CORP</div></div>
+          <div class="f"><div class="fl" id="out_lbl_marca_emisor">Marca Comercial:</div><div class="fv">SegurosFly.com</div></div>
           <div class="f"><div class="fl">Tax ID / EIN:</div><div class="fv">36-5152831</div></div>
-          <div class="f"><div class="fl">Jurisdicción:</div><div class="fv">State of Texas, USA</div></div>
-          <div class="f"><div class="fl">Domicilio:</div><div class="fv">8352 Bristlecone Pine Way, Magnolia, TX 77354</div></div>
-          <div class="f"><div class="fl">Contacto:</div><div class="fv">info@segurosfly.com</div></div>
+          <div class="f"><div class="fl" id="out_lbl_jurisdiccion">Jurisdicción:</div><div class="fv">State of Texas, USA</div></div>
+          <div class="f"><div class="fl" id="out_lbl_domicilio_emisor">Domicilio:</div><div class="fv">8352 Bristlecone Pine Way, Magnolia, TX 77354</div></div>
+          <div class="f"><div class="fl" id="out_lbl_contacto">Contacto:</div><div class="fv">info@segurosfly.com</div></div>
         </div>
         <div class="card">
           <h3 id="out_cardtitle">RECEPTOR / CLIENTE</h3>
           <div class="f"><div class="fl" id="out_lbl_razon">Razón Social:</div><div class="fv" id="out_razon">—</div></div>
           <div class="f"><div class="fl" id="out_lbl_idfiscal">RFC:</div><div class="fv" id="out_idfiscal">—</div></div>
-          <div class="f"><div class="fl">Domicilio Fiscal:</div><div class="fv" id="out_domicilio">—</div></div>
+          <div class="f"><div class="fl" id="out_lbl_domicilio">Domicilio Fiscal:</div><div class="fv" id="out_domicilio">—</div></div>
           <div class="f" id="row_extra" style="display:none"><div class="fl" id="out_lbl_extra"></div><div class="fv" id="out_extra"></div></div>
-          <div class="f"><div class="fl">Pasajero:</div><div class="fv" id="out_pasajero">—</div></div>
-          <div class="f"><div class="fl">Documento ID:</div><div class="fv" id="out_docid">—</div></div>
-          <div class="f"><div class="fl">Correo:</div><div class="fv" id="out_correo">—</div></div>
+          <div class="f"><div class="fl" id="out_lbl_pasajero">Pasajero:</div><div class="fv" id="out_pasajero">—</div></div>
+          <div class="f"><div class="fl" id="out_lbl_docid">Documento ID:</div><div class="fv" id="out_docid">—</div></div>
+          <div class="f"><div class="fl" id="out_lbl_correo">Correo:</div><div class="fv" id="out_correo">—</div></div>
         </div>
       </div>
 
-      <div class="svc-title">DETALLE DEL SERVICIO DE ASISTENCIA</div>
+      <div class="svc-title" id="out_svctitle">DETALLE DEL SERVICIO DE ASISTENCIA</div>
       <table class="svc">
-        <thead><tr><th style="width:12%">Código</th><th style="width:48%">Descripción del Servicio</th><th style="width:8%">Cant.</th><th style="width:16%">Valor Unitario</th><th style="width:16%">Total</th></tr></thead>
+        <thead><tr><th id="out_th_codigo" style="width:12%">Código</th><th id="out_th_desc" style="width:48%">Descripción del Servicio</th><th id="out_th_cant" style="width:8%">Cant.</th><th id="out_th_valor" style="width:16%">Valor Unitario</th><th id="out_th_total" style="width:16%">Total</th></tr></thead>
         <tbody id="out_items"></tbody>
       </table>
 
       <div class="bottom">
         <div class="conf-box">
-          <div class="t">✓ COMPROBANTE DE PAGO CONFIRMADO</div>
-          <div>Forma de Pago: <span id="out_formapago"></span><br>Moneda: <span id="out_moneda"></span><br>Este comprobante se emite como constancia de liquidación total del servicio de asistencia en viaje contratado.</div>
+          <div class="t" id="out_conftitle">✓ COMPROBANTE DE PAGO CONFIRMADO</div>
+          <div><span id="out_lbl_formapago">Forma de Pago:</span> <span id="out_formapago"></span><br><span id="out_lbl_moneda">Moneda:</span> <span id="out_moneda"></span><br><span id="out_conftext"></span></div>
         </div>
         <div class="tot-box">
-          <div class="tot-row"><div class="l">Subtotal (líneas de servicio):</div><div class="v" id="out_subtotal">0.00</div></div>
-          <div class="tot-row"><div class="l">Impuestos:</div><div class="v" id="out_impuestos">0.00</div></div>
-          <div class="tot-row total"><div class="l">TOTAL NETO PAGADO:</div><div class="v" id="out_total">0.00</div></div>
+          <div class="tot-row"><div class="l" id="out_lbl_subtotal">Subtotal (líneas de servicio):</div><div class="v" id="out_subtotal">0.00</div></div>
+          <div class="tot-row"><div class="l" id="out_lbl_impuestos">Impuestos:</div><div class="v" id="out_impuestos">0.00</div></div>
+          <div class="tot-row total"><div class="l" id="out_lbl_totalpagado">TOTAL NETO PAGADO:</div><div class="v" id="out_total">0.00</div></div>
         </div>
       </div>
       </div>
 
-      <div class="footer">
+      <div class="footer" id="out_footer">
         SegurosFly.com — Marca de Fly Group Corp | Houston, Texas, USA | Asistencia 24/7: +1 936 548 6775 | emergencias@segurosfly.com
       </div>
     </div>
@@ -284,6 +286,48 @@ const LEGAL = {
     title:"Tratamiento Fiscal en Argentina — Proveedor del Exterior:",
     body:"Factura Comercial emitida por FLY GROUP CORP (Texas, EE. UU., Tax ID EIN 36-5152831), sin residencia fiscal ni establecimiento permanente en Argentina. A diferencia de México/Colombia, aquí el pago a beneficiarios del exterior se rige por normas propias de AFIP/ARCA (posible retención de Ganancias y/o IVA por servicios digitales, según el caso). Este comprobante es el respaldo comercial de la operación; confirme con su contador el tratamiento y retenciones aplicables antes de deducir el gasto.",
     extraLabel:"Condición ante el IVA:"
+  },
+  US: {
+    idLabel: "Tax ID / EIN (optional):", country:"UNITED STATES", suf:"US",
+    title:"Sales Tax Note:",
+    body:"This is a domestic invoice issued by FLY GROUP CORP (Houston, Texas, USA, Tax ID EIN 36-5152831) for a purchase made and paid within the United States. Travel assistance services are not among the taxable service categories listed in Texas Tax Code Sec. 151.0101, so no Texas sales tax is charged on this invoice. If your accountant needs anything further to support this treatment, feel free to have them contact us.",
+    extraLabel:null,
+    lang:"en"
+  }
+};
+
+const I18N = {
+  es: {
+    title:"FACTURA COMERCIAL<br>INTERNACIONAL",
+    lblFactura:"N° FACTURA", lblFecha:"FECHA EMISIÓN", lblVoucher:"N° VOUCHER", lblEstado:"ESTADO", valPagado:"PAGADO",
+    emisorTitle:"EMISOR / PROVEEDOR INTERNACIONAL",
+    lblRazonEmisor:"Razón Social:", lblMarcaEmisor:"Marca Comercial:", lblJurisdiccion:"Jurisdicción:", lblDomicilioEmisor:"Domicilio:", lblContacto:"Contacto:",
+    cardTitle:"RECEPTOR / CLIENTE",
+    lblRazon:"Razón Social:", lblDomicilio:"Domicilio Fiscal:", lblPasajero:"Pasajero:", lblDocid:"Documento ID:", lblCorreo:"Correo:",
+    svcTitle:"DETALLE DEL SERVICIO DE ASISTENCIA",
+    thCodigo:"Código", thDesc:"Descripción del Servicio", thCant:"Cant.", thValor:"Valor Unitario", thTotal:"Total",
+    confTitle:"✓ COMPROBANTE DE PAGO CONFIRMADO",
+    lblFormapago:"Forma de Pago:", lblMoneda:"Moneda:",
+    confText:"Este comprobante se emite como constancia de liquidación total del servicio de asistencia en viaje contratado.",
+    lblSubtotal:"Subtotal (líneas de servicio):", lblImpuestos:"Impuestos:", lblTotalPagado:"TOTAL NETO PAGADO:",
+    footer:"SegurosFly.com — Marca de Fly Group Corp | Houston, Texas, USA | Asistencia 24/7: +1 936 548 6775 | emergencias@segurosfly.com",
+    locale:"es-MX"
+  },
+  en: {
+    title:"INVOICE",
+    lblFactura:"INVOICE NO.", lblFecha:"ISSUE DATE", lblVoucher:"VOUCHER NO.", lblEstado:"STATUS", valPagado:"PAID",
+    emisorTitle:"SERVICE PROVIDER",
+    lblRazonEmisor:"Legal Name:", lblMarcaEmisor:"Trade Name:", lblJurisdiccion:"Jurisdiction:", lblDomicilioEmisor:"Address:", lblContacto:"Contact:",
+    cardTitle:"BILL TO",
+    lblRazon:"Company / Full Name:", lblDomicilio:"Billing Address:", lblPasajero:"Traveler(s):", lblDocid:"ID / Passport No.:", lblCorreo:"Email:",
+    svcTitle:"TRAVEL ASSISTANCE SERVICE DETAIL",
+    thCodigo:"Code", thDesc:"Service Description", thCant:"Qty.", thValor:"Unit Price", thTotal:"Total",
+    confTitle:"✓ PAYMENT CONFIRMED",
+    lblFormapago:"Payment Method:", lblMoneda:"Currency:",
+    confText:"This receipt is issued as proof of full payment for the travel assistance service purchased.",
+    lblSubtotal:"Subtotal (service lines):", lblImpuestos:"Taxes:", lblTotalPagado:"TOTAL AMOUNT PAID:",
+    footer:"SegurosFly.com — A Fly Group Corp Brand | Houston, Texas, USA | 24/7 Assistance: +1 936 548 6775 | emergencies@segurosfly.com",
+    locale:"en-US"
   }
 };
 
@@ -374,10 +418,44 @@ function invoiceNumber(voucher, suf){
 function render(){
   const pais = document.getElementById('pais').value;
   const cfg = LEGAL[pais];
+  const lang = cfg.lang || 'es';
+  const t = I18N[lang];
 
   document.getElementById('lbl_idfiscal').textContent = cfg.idLabel;
   document.getElementById('out_lbl_idfiscal').textContent = cfg.idLabel;
-  document.getElementById('out_cardtitle').textContent = "RECEPTOR / CLIENTE (" + cfg.country + ")";
+
+  document.getElementById('out_title').innerHTML = t.title;
+  document.getElementById('out_lbl_factura').textContent = t.lblFactura;
+  document.getElementById('out_lbl_fecha').textContent = t.lblFecha;
+  document.getElementById('out_lbl_voucher').textContent = t.lblVoucher;
+  document.getElementById('out_lbl_estado').textContent = t.lblEstado;
+  document.getElementById('out_val_pagado').textContent = t.valPagado;
+  document.getElementById('out_emisortitle').textContent = t.emisorTitle;
+  document.getElementById('out_lbl_razon_emisor').textContent = t.lblRazonEmisor;
+  document.getElementById('out_lbl_marca_emisor').textContent = t.lblMarcaEmisor;
+  document.getElementById('out_lbl_jurisdiccion').textContent = t.lblJurisdiccion;
+  document.getElementById('out_lbl_domicilio_emisor').textContent = t.lblDomicilioEmisor;
+  document.getElementById('out_lbl_contacto').textContent = t.lblContacto;
+  document.getElementById('out_lbl_razon').textContent = t.lblRazon;
+  document.getElementById('out_lbl_domicilio').textContent = t.lblDomicilio;
+  document.getElementById('out_lbl_pasajero').textContent = t.lblPasajero;
+  document.getElementById('out_lbl_docid').textContent = t.lblDocid;
+  document.getElementById('out_lbl_correo').textContent = t.lblCorreo;
+  document.getElementById('out_svctitle').textContent = t.svcTitle;
+  document.getElementById('out_th_codigo').textContent = t.thCodigo;
+  document.getElementById('out_th_desc').textContent = t.thDesc;
+  document.getElementById('out_th_cant').textContent = t.thCant;
+  document.getElementById('out_th_valor').textContent = t.thValor;
+  document.getElementById('out_th_total').textContent = t.thTotal;
+  document.getElementById('out_conftitle').textContent = t.confTitle;
+  document.getElementById('out_lbl_formapago').textContent = t.lblFormapago;
+  document.getElementById('out_lbl_moneda').textContent = t.lblMoneda;
+  document.getElementById('out_conftext').textContent = t.confText;
+  document.getElementById('out_lbl_subtotal').textContent = t.lblSubtotal;
+  document.getElementById('out_lbl_impuestos').textContent = t.lblImpuestos;
+  document.getElementById('out_lbl_totalpagado').textContent = t.lblTotalPagado;
+  document.getElementById('out_footer').textContent = t.footer;
+  document.getElementById('out_cardtitle').textContent = t.cardTitle + " (" + cfg.country + ")";
   document.getElementById('out_legaltitle').textContent = cfg.title;
   document.getElementById('out_legalbody').textContent = cfg.body;
 
@@ -402,7 +480,7 @@ function render(){
   document.getElementById('out_invnum').textContent = invoiceNumber(voucher, cfg.suf);
 
   const fecha = document.getElementById('fecha').value;
-  document.getElementById('out_fecha').textContent = fecha ? new Date(fecha+'T00:00:00').toLocaleDateString('es-MX') : '—';
+  document.getElementById('out_fecha').textContent = fecha ? new Date(fecha+'T00:00:00').toLocaleDateString(t.locale) : '—';
 
   document.getElementById('out_razon').textContent = document.getElementById('razon').value || '—';
   document.getElementById('out_idfiscal').textContent = document.getElementById('idfiscal').value || '—';

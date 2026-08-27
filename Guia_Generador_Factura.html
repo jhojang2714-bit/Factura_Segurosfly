@@ -138,8 +138,22 @@
         <tr><td>N° de Voucher/Certificado</td><td>Código del viaje contratado.</td></tr>
       </table>
 
+      <div class="country-title"><span class="flag-chip">ESTADOS UNIDOS</span></div>
+      <p style="font-size:12.5px; color:var(--gris-txt); margin-top:-6px;">Este caso es distinto: aquí Fly Group Corp no factura como proveedor extranjero, sino como empresa de Texas facturando a alguien que paga desde EE. UU. Por eso la lista de datos es más corta — no existe un equivalente a RFC/CUIT/NIT para personas o empresas de EE. UU. — y la factura se genera <b>en inglés</b>.</p>
+      <table>
+        <tr><th>Dato</th><th>Para qué sirve</th></tr>
+        <tr><td>Nombre completo o razón social</td><td>Nombre legal de quien paga (persona o empresa/LLC).</td></tr>
+        <tr><td>Dirección de facturación</td><td>Ciudad/estado/código postal — opcional, para registro del asesor, no es obligatoria para que la factura sea válida.</td></tr>
+        <tr><td>Correo electrónico</td><td>Para enviar la factura.</td></tr>
+        <tr><td>EIN / Tax ID</td><td>Opcional — solo si el cliente (empresa) lo pide para sus propios registros contables. No es requisito para emitir la factura.</td></tr>
+        <tr><td>Pasajero y documento</td><td>Nombre y N° de pasaporte/ID del viajero (misma regla de 1-2 vs. 3+ pasajeros que en los otros países).</td></tr>
+        <tr><td>N° de Voucher/Certificado</td><td>Código del viaje contratado.</td></tr>
+      </table>
+
       <div class="legal-diff">
         <b>Diferencia importante entre países:</b> en Colombia el cliente legaliza el gasto ante la DIAN con el mecanismo de "Documento Soporte". En México, el SAT permite deducir con la Regla 2.7.1.14 de la RMF. En <b>Argentina no existe un mecanismo tan directo</b>: AFIP/ARCA trata los pagos a proveedores del exterior bajo el régimen de "Beneficiarios del Exterior" (posibles retenciones de Ganancias y/o IVA por servicios digitales). Por eso, para clientes argentinos siempre se recomienda que confirmen el tratamiento con su contador antes de deducir el gasto — la factura ya incluye esa nota.
+        <br><br>
+        <b>Estados Unidos es un caso aparte:</b> no es una factura a proveedor extranjero, sino una factura doméstica de una empresa de Texas a alguien que paga en EE. UU. — no hay RFC/CUIT/NIT que pedir, ni nota de retención por beneficiario del exterior. Sobre impuestos: los servicios de asistencia de viaje no están dentro de las ~17 categorías de servicios gravados en Texas (Tax Code §151.0101), así que normalmente <b>no se cobra sales tax</b> en esta factura; el generador ya incluye esa nota en el recuadro legal. Si el cliente tiene una situación particular (otro estado, otra clasificación del servicio), que lo confirme con su contador.
       </div>
 
       <div class="note">
@@ -216,6 +230,23 @@
         <tr><td>Descuento</td><td>Descuento Promocional (65%) + Cupón Descuento25 (25%)</td><td>1</td><td>-COP 2.033.942</td></tr>
       </table>
       <p style="font-size:12.5px; color:var(--gris-txt);">Con 4 pasajeros ya no se listan los nombres individuales (regla de arriba) — solo la cantidad y la referencia al certificado, que es donde vive el detalle completo de cada persona.</p>
+
+      <div class="country-title"><span class="flag-chip">EJEMPLO 3 — Factura doméstica en inglés (Estados Unidos)</span></div>
+      <p>Mismo certificado <code>CER202608076208ARU</code> (Plan Max, 16 días, Argentina → Estados Unidos, 2 pasajeros), pero aquí quien paga es una empresa de EE. UU.: <b>Blue & Gold VII LLC</b> (bluegoldviillc@gmail.com). Como el pago se hizo desde Estados Unidos, se elige "Estados Unidos" en el generador y la factura sale completa en inglés — sin RFC/CUIT, sin nota de retención, y con la nota de sales tax en su lugar. El orden de las líneas importa: primero el plan, luego los descuentos en cascada, y los upgrades <b>al final</b> (así el descuento no se aplica sobre los upgrades), igual que en el recibo original: Subtotal USD 434.46, Descuento 65% -USD 282.40, Descuento 25% -USD 38.02, Upgrades +USD 96.92, Total USD 210.97.</p>
+      <table>
+        <tr><th>Code</th><th>Description</th><th>Qty.</th><th>Unit Price</th><th>Total</th></tr>
+        <tr>
+          <td>SF-MAX-16D</td>
+          <td>Travel Assistance – Plan Max (16 days). Route: Argentina → United States. Coverage: 08/30/2026 to 09/14/2026. Travelers: Jorge Eduardo Cazorro and Carmen Viviana Cuozzo. Certificate/Voucher: CER202608076208ARU</td>
+          <td>2</td>
+          <td>USD 217.23</td>
+          <td>USD 434.46</td>
+        </tr>
+        <tr><td>Des_65%</td><td>Promotional Discount (65%)</td><td>—</td><td>65%</td><td>-USD 282.40</td></tr>
+        <tr><td>Des_25%</td><td>Coupon Discount25 (25%)</td><td>—</td><td>25%</td><td>-USD 38.02</td></tr>
+        <tr><td>UPG-01</td><td>Upgrades: Multi-Cause Cancellation, Tech Protection, Pre-existing Condition Max</td><td>1</td><td>USD 96.92</td><td>USD 96.92</td></tr>
+      </table>
+      <p style="font-size:12.5px; color:var(--gris-txt);">Bill To: Blue & Gold VII LLC — bluegoldviillc@gmail.com. Sin dirección de facturación ni EIN provistos aún; se dejan en blanco hasta que el cliente los envíe (no son obligatorios para emitir esta factura).</p>
     </div>
   </div>
 
